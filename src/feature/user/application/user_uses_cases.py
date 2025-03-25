@@ -1,5 +1,7 @@
+from feature.user.domain.user_repository_interface import UserRepositoryInterface
+
 class UserUseCases:
-    def __init__(self, user_service):
+    def __init__(self, user_service: UserRepositoryInterface):
         self.user_service = user_service
 
     async def create_user(self, id: str, name: str, email: str):

@@ -1,15 +1,17 @@
 from fastapi import  HTTPException, Request
 from uuid import uuid4
+from feature.user.application.user_dtos import UserCreateRequest
 
 class UserController:
     def __init__(self, user_use_cases):
         self.user_use_cases = user_use_cases
 
-    async def create_user(self, request: Request):
+    async def create_user(self, user_data: UserCreateRequest):
         # Extraer datos del cuerpo de la solicitud
-        body = await request.json()
-        name = body.get("name")
-        email = body.get("email")
+        
+        name = user_data.name
+        email = user_data.email
+      
         if not name or not email:
             raise HTTPException(status_code=400, detail="Faltan campos obligatorios: name o email")
 
@@ -20,9 +22,9 @@ class UserController:
         created_user = await self.user_use_cases.create_user(user_id, name, email)
         return {"status": 201, "user": created_user}
 
-    async def get_user_by_id(self, request: Request):
+    async def get_user_by_id(self, user_id):
         # Extraer el ID de usuario de los parámetros de consulta
-        user_id = request.query_params.get("id")
+        user_id = user_id
        # Obtener el usuario por ID
         user = await self.user_use_cases.get_user_by_id(user_id)
         if not user:
