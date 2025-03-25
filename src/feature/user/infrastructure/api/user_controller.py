@@ -1,6 +1,6 @@
-from fastapi import  HTTPException, Request
+from fastapi import  HTTPException
 from uuid import uuid4
-from feature.user.application.user_dtos import UserCreateRequest
+from feature.user.application.user_dtos import UserCreateRequest,UserResponse
 
 class UserController:
     def __init__(self, user_use_cases):
@@ -20,7 +20,8 @@ class UserController:
 
         # Crear el usuario
         created_user = await self.user_use_cases.create_user(user_id, name, email)
-        return {"status": 201, "user": created_user}
+        user_response = UserResponse.from_domain(created_user)   
+        return {"status": 200, "user": user_response.dict()}
 
     async def get_user_by_id(self, user_id):
         # Extraer el ID de usuario de los parámetros de consulta
@@ -29,9 +30,9 @@ class UserController:
         user = await self.user_use_cases.get_user_by_id(user_id)
         if not user:
             raise HTTPException(status_code=404, detail="Usuario no encontrado")
-        return {"status": 200, "user": user}
+        return {"status": 200, "user": UserResponse.from_domain(user).dict()}
 
     async def get_users(self):
         # Obtener todos los usuarios
         users = await self.user_use_cases.get_users()
-        return {"status": 200, "users": users}
+        return {"status": 200, "users": [UserResponse.from_domain(user).dict() for user in users]}

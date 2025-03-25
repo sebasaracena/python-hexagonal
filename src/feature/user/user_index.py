@@ -3,8 +3,7 @@ from feature.user.infrastructure.api.user_controller import UserController
 from feature.user.application.user_uses_cases import UserUseCases
 from feature.user.infrastructure.api.user_service import UserService
 from feature.user.infrastructure.persistence.user_repository import UserRepository
-from feature.user.application.user_dtos import UserCreateRequest, UserResponse
-
+from feature.user.application.user_dtos import UserCreateRequest
 
 
 def get_user_router(db):
