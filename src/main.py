@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from feature.user.user_index import get_user_router
-
+from routes import configure_routes
 app = FastAPI()
 db = {}  # Simulación de base de datos
-app.include_router(get_user_router(db), prefix="/api/user")
+configure_routes(app, db)
 
 if __name__ == "__main__":
     import uvicorn
