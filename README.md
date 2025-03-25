@@ -28,6 +28,7 @@ src/
 │   │   ├── user.py
 │   │   └── user_repository_interface.py
 │   ├── application/
+│   │   └── user_dtos.py
 │   │   └── user_uses_cases.py
 │   └── infrastructure/
 │       ├── api/
