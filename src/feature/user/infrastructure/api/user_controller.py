@@ -36,3 +36,27 @@ class UserController:
         # Obtener todos los usuarios
         users = await self.user_use_cases.get_users()
         return {"status": 200, "users": [UserResponse.from_domain(user).dict() for user in users]}
+    
+    async def update_user(self, user_data:UserResponse):
+        # Extraer datos del cuerpo de la solicitud
+        user_id = user_data.id
+        name = user_data.name
+        email = user_data.email
+
+        if not user_id or not name or not email:
+            raise HTTPException(status_code=400, detail="Faltan campos obligatorios: id, name o email")
+
+        # Actualizar el usuario
+        updated_user = await self.user_use_cases.update_user(user_id, name, email)
+        if not updated_user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        return {"status": 200, "user": UserResponse.from_domain(updated_user).dict()}
+    
+    async def delete_user(self, user_id):
+        # Extraer el ID de usuario de los parámetros de consulta
+        user_id = user_id
+        # Eliminar el usuario por ID
+        deleted_user = await self.user_use_cases.delete_user(user_id)
+        if not deleted_user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        return {"status": 200, "message": "Usuario eliminado correctamente"}

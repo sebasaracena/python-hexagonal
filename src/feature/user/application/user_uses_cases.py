@@ -18,3 +18,13 @@ class UserUseCases:
         # Llama al servicio para obtener todos los usuarios
         users = await self.user_service.get_users()
         return users
+    
+    async def update_user(self, user_id: str, name: str, email: str):
+        # Llama al servicio para actualizar un usuario existente
+        updated_user = await self.user_service.update_user(user_id, name, email)
+        return updated_user
+    
+    async def delete_user(self, user_id: str):
+        # Llama al servicio para eliminar un usuario por ID
+        deleted_user = await self.user_service.delete_user(user_id)
+        return deleted_user

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Body, Path
 from feature.user.infrastructure.api.user_controller import UserController
 from feature.user.application.user_uses_cases import UserUseCases
-from feature.user.infrastructure.api.user_service import UserService
-from feature.user.infrastructure.persistence.user_repository import UserRepository
-from feature.user.application.user_dtos import UserCreateRequest
+from feature.user.infrastructure.adapter.user_repository_impl import UserRepositoryImpl
+from feature.user.infrastructure.repository.user_repository import UserRepository
+from feature.user.application.user_dtos import UserCreateRequest,UserResponse
 
 
 def get_user_router(db):
@@ -11,7 +11,7 @@ def get_user_router(db):
 
     # Configuración de dependencias
     user_repository = UserRepository(db)
-    user_service = UserService(user_repository)
+    user_service =  UserRepositoryImpl(user_repository)
     user_use_cases = UserUseCases(user_service)
     user_controller = UserController(user_use_cases)
 
@@ -40,5 +40,25 @@ def get_user_router(db):
     )
     async def get_users():
         return await user_controller.get_users()
+
+    @router.put(
+        "/updateuser",
+        summary="Update user",
+        description="Updates an existing user with the provided name and email"
+    )
+    async def update_user(
+        user: UserResponse = Body(...)
+    ):
+        return await user_controller.update_user(user)
+    
+    @router.delete(
+        "/deleteuser/{user_id}",
+        summary="Delete user",
+        description="Deletes a user by their unique identifier"
+    )
+    async def delete_user(
+        user_id: str = Path(..., title="User ID", description="The unique identifier of the user")
+    ):
+        return await user_controller.delete_user(user_id)
 
     return router
